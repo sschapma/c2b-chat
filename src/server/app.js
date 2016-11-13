@@ -100,8 +100,12 @@ db.once('open', function() {
       console.log('user disconnected');
     });
 
-    socket.on('add-message', (message, userName) => {
-      io.emit('message', {type:'new-message', sender: 'client', id: userId, content: message, user: userName});
+    socket.on('add-message', (message, userName, chatId, agent) => {
+      if (agent){
+        io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
+      }else{
+        io.emit('message', {type:'new-message', sender: 'client', id: userId, content: message, user: userName});
+      }
       console.log(message);
     });
     socket.on('agent-message', (message, chatId, userName) => {

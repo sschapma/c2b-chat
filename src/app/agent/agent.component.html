@@ -1,13 +1,13 @@
 <ul>
   <li *ngFor="let chat of activeChats" style="list-style-type:none;">
-    <span (click)="currentChat=chat.id">{{chat.user}}</span>
+    <span (click)="currentChat=chat">{{chat.user}}</span>
   </li>
 </ul>
 
 <aside>
   <ul>
     <li style="list-style-type:none;">
-      <span *ngFor="let message of messages"><span *ngIf="message.id==currentChat">
+      <span *ngFor="let message of messages"><span *ngIf="message.id==currentChat?.id">
         <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
         <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
         <div class="clear"></div>
@@ -15,19 +15,4 @@
     </li>
   </ul>
 </aside>
-
-<div>
-  <ul>
-    <li style="list-style-type:none;">
-      <span *ngFor="let message of messages">
-        <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
-        <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
-        <div class="clear"></div>
-      </span>
-    </li>
-  </ul>
-</div>
-
-<div style="background-color:black; height:100px; width:100%;">
-  <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" class="form-control chat-input" type="text" id="agentMsg" />
-</div>
+<input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" class="form-control chat-input" type="text" id="agentMsg" />

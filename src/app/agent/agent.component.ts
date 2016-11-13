@@ -29,7 +29,7 @@ export class AgentComponent implements OnInit, OnDestroy {
     }, 15);
   }
   agentMessage(){
-    this.chatService.agentMessage(this.agentMsg, this.chatId, this.userName);
+    this.chatService.agentMessage(this.agentMsg, this.currentChat.user, this.currentChat.id, 'agent');
     this.agentMsg = '';
     setTimeout(() => {
       let elem = document.getElementById('chatModal');

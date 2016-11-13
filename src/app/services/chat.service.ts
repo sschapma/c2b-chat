@@ -12,8 +12,8 @@ export class ChatService {
     this.socket.emit('add-message', message, userName);
   }
 
-  agentMessage(message, id, userName) {
-    this.socket.emit('agent-message', message, id, userName);
+  agentMessage(message, id, userName, agent) {
+    this.socket.emit('add-message', message, id, userName, agent);
   }
 
   getMessages() {
@@ -23,6 +23,9 @@ export class ChatService {
         this.sessionId = data;
       });
       this.socket.on('message', (data) => {
+        observer.next(data);
+      });
+      this.socket.on('agent-message', (data) => {
         observer.next(data);
       });
       return () => {
