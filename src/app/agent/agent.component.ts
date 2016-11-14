@@ -20,19 +20,11 @@ export class AgentComponent implements OnInit, OnDestroy {
 
   constructor(private chatService:ChatService) {}
 
-  sendMessage(){
-    this.chatService.sendMessage(this.message, this.userName);
-    this.message = '';
-    setTimeout(() => {
-      let elem = document.getElementById('chatModal');
-      elem.scrollIntoView(false);
-    }, 15);
-  }
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user, this.currentChat.id, 'agent');
     this.agentMsg = '';
     setTimeout(() => {
-      let elem = document.getElementById('chatModal');
+      let elem = document.getElementById('agentChatBody');
       elem.scrollIntoView(false);
     }, 15);
   }
@@ -51,18 +43,6 @@ export class AgentComponent implements OnInit, OnDestroy {
         this.activeChats.push(x);
       };
     });
-  }
-
-  viewWindow(chatWindow){
-    this.chatId=chatWindow;
-    console.log(this.id);
-  }
-
-  checkSession(message){
-    console.log(message);
-    if (message.id === this.chatId){
-      return true;
-    }return false;
   }
 
   ngOnDestroy() {

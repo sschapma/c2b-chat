@@ -1,5 +1,5 @@
 html,
-body {
+body, .container {
     height: 100%;
 }
 
@@ -102,6 +102,19 @@ body {
 	background:white;
 	border-bottom-right-radius: 10px;
 	-webkit-transform:translate(-30px, -2px);
+}
+.custom-panel{
+  width:80%;
+  float:right;
+  height:87.5%;
+}
+.chat-list{
+  width:20%;
+  float:left;
+  height:87.5%;
+}
+.agent-container{
+  height:100%;
 }
 
 .agent,.client {

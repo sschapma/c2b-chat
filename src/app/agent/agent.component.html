@@ -1,10 +1,20 @@
-<ul>
-  <li *ngFor="let chat of activeChats" style="list-style-type:none;">
-    <span (click)="currentChat=chat">{{chat.user}}</span>
-  </li>
-</ul>
+<div class="agent-container">
+<div class="panel panel-primary chat-list">
+  <div class="panel-heading">
+    Active Chats
+  </div>
+  <div class="panel-body">
+    <ul>
+      <li *ngFor="let chat of activeChats" style="list-style-type:none;">
+        <span (click)="currentChat=chat">{{chat.user}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
 
-<aside>
+<div *ngIf="currentChat" class="panel panel-primary custom-panel" id="agentChatBody">
+  <div class="panel-heading text-center">{{currentChat.user}}</div>
+  <div class="panel-body" style="height:87%;overflow:auto;">
   <ul>
     <li style="list-style-type:none;">
       <span *ngFor="let message of messages"><span *ngIf="message.id==currentChat?.id">
@@ -14,5 +24,9 @@
       </span></span>
     </li>
   </ul>
-</aside>
-<input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" class="form-control chat-input" type="text" id="agentMsg" />
+</div>
+<div class="panel-footer">
+  <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" class="form-control agent-input" type="text" id="agentMsg" />
+</div>
+</div>
+</div>
