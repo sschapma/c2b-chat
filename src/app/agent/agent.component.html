@@ -1,20 +1,16 @@
 <div class="agent-container">
 <div class="panel panel-primary chat-list">
-  <div class="panel-heading">
-    Active Chats
-  </div>
-  <div class="panel-body">
-    <ul>
-      <li *ngFor="let chat of activeChats" style="list-style-type:none;">
-        <span (click)="currentChat=chat">{{chat.user}}</span>
-      </li>
-    </ul>
+  <div class="panel-heading activeRadius">Active Chats</div>
+  <div class="panel-body active-sidebar">
+      <div *ngFor="let chat of activeChats" (click)="currentChat=chat" class="user-div">
+        <h6 style="margin:0;">{{chat.user}}</h6>
+      </div>
   </div>
 </div>
 
 <div *ngIf="currentChat" class="panel panel-primary custom-panel" id="agentChatBody">
-  <div class="panel-heading text-center">{{currentChat.user}}</div>
-  <div class="panel-body" style="height:87%;overflow:auto;">
+  <div class="panel-heading text-center chatRadius">{{currentChat.user}}</div>
+  <div class="panel-body full-length">
   <ul>
     <li style="list-style-type:none;">
       <span *ngFor="let message of messages"><span *ngIf="message.id==currentChat?.id">
@@ -26,7 +22,7 @@
   </ul>
 </div>
 <div class="panel-footer">
-  <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" class="form-control agent-input" type="text" id="agentMsg" />
+  <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" autofocus="" class="form-control agent-input" type="text" id="agentMsg" />
 </div>
 </div>
 </div>

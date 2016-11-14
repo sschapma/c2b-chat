@@ -30,9 +30,10 @@ export class AgentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    $('.chat').hide();
     this.connection = this.chatService.getMessages().subscribe(message => {
       this.messages.push(message);
-      let x = {id:message.id,user:message.user};
+      let x = {id:message["id"],user:message["user"]};
       let idExists = false;
       for (let i=0;i<this.activeChats.length;i++){
         if(this.activeChats[i].id == x.id){
