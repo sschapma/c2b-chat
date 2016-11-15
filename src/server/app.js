@@ -22,6 +22,7 @@ mongoose.Promise = global.Promise;
 
 // Models
 var Cat = require('./cat.model.js');
+var Chat = require('./chat.model.js');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -72,6 +73,55 @@ db.once('open', function() {
   // delete by id
   app.delete('/cat/:id', function(req, res) {
     Cat.findOneAndRemove({_id: req.params.id}, function(err) {
+      if(err) return console.error(err);
+      res.sendStatus(200);
+    });
+  });
+
+  //chat APIs
+  // select all
+  app.get('/chats', function(req, res) {
+    Chat.find({}, function(err, docs) {
+      if(err) return console.error(err);
+      res.json(docs);
+    });
+  });
+
+  // create
+  app.post('/chat', function(req, res) {
+    var obj = new Chat(req.body);
+    obj.save(function(err, obj) {
+      if(err) return console.error(err);
+      res.status(200).json(obj);
+      console.log(obj);
+    });
+  });
+
+  // find by id
+  app.get('/chat/:id', function(req, res) {
+    Chat.findOne({_id: req.params.id}, function(err, obj) {
+      if(err) return console.error(err);
+      res.json(obj);
+    })
+  });
+
+  // update by id
+  app.put('/chat/:id', function(req, res) {
+    Chat.findByIdAndUpdate(
+      {_id: req.params.id},
+      {$push: {"messages": {socketId:req.body.socketId, sender:req.body.sender, message:req.body.message, time:req.body.time}}},
+      {safe: true, upsert: true},
+      function(err, model) {
+        if(err) return console.error(err);
+        res.sendStatus(200);
+      }
+    );
+  });
+
+
+  // delete by id
+  app.delete('/chat/:id', function(req, res) {
+    Chat.findOneAndRemove({_id: req.params.id}, function(err) {
       if(err) return console.error(err);
       res.sendStatus(200);
     });

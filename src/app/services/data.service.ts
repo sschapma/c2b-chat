@@ -20,11 +20,12 @@ export class DataService {
   }
 
   editCat(cat) {
+    console.log(cat)
     return this.http.put(`/cat/${cat._id}`, JSON.stringify(cat), this.options);
   }
 
   deleteCat(cat) {
     return this.http.delete(`/cat/${cat._id}`, this.options);
   }
-  
+
 }

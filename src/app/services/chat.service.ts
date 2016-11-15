@@ -1,20 +1,39 @@
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
 
+@Injectable()
 export class ChatService {
   private url = 'http://localhost:3000';
   private socket;
   public sessionId;
   public activeChats:any=[];
 
-  sendMessage(message, userName){
+  private headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
+  private options = new RequestOptions({ headers: this.headers });
+
+  constructor(private http: Http) { }
+
+  sendMessage(message, userName, id){
     this.socket.emit('add-message', message, userName);
   }
 
-  agentMessage(message, id, userName, agent) {
+  agentMessage(message, userName, id, agent) {
     this.socket.emit('add-message', message, id, userName, agent);
+    let chat = {
+      userName: userName,
+      socketId: id,
+      messages: {
+        message:message,
+        sender:'agent'
+      }
+    };
+    this.addChat(chat);
   }
+
 
   getMessages() {
     let observable = new Observable(observer => {
@@ -34,4 +53,22 @@ export class ChatService {
     })
     return observable;
   }
+
+  // chat api calls
+    getChats() {
+      return this.http.get('/chats').map(res => res.json());
+    }
+
+    addChat(chat) {
+      //console.log(JSON.parse(chat));
+      return this.http.post("/chat", JSON.stringify(chat), this.options);
+    }
+
+    editChat(id, chat) {
+      return this.http.put(`/chat/${id}`, JSON.stringify(chat), this.options);
+    }
+
+    deleteChat(chat) {
+      return this.http.delete(`/chat/${chat._id}`, this.options);
+    }
 }

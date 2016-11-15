@@ -12,6 +12,7 @@ import { ChatService }       from './services/chat.service';
 
 export class AppComponent implements OnInit, OnDestroy {
   public messages:any = [];
+  public dbMessage:any = {};
   public userName:string = '';
   connection;
   message;
@@ -20,12 +21,57 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private chatService:ChatService) {}
 
   sendMessage(){
-    this.chatService.sendMessage(this.message, this.userName);
-    this.message = '';
+    this.chatService.sendMessage(this.message, this.userName, this.id);
+    let x = localStorage.getItem("chatId");
+    if (x){
+      this.updateDb(x);
+    }else{
+      this.saveToDb();
+    }
+  }
+  updateDb(id){
+    let msgToPush = {
+      message:this.message,
+      sender:this.userName,
+      socketId:this.id,
+      time: new Date()
+    };
+    //this.dbMessage.messages.push(msgToPush);
+    this.chatService.editChat(id, msgToPush).subscribe(
+      res => {},
+      error => console.log('error')
+    );
+    this.clearAndScroll();
+  }
+
+  saveToDb(){
+    let chat = {
+      userName: this.userName,
+      messages: [{
+        message:this.message,
+        sender:this.userName,
+        socketId: this.id,
+        time: new Date()
+      }]
+    };
+    this.chatService.addChat(chat).subscribe(
+      res => {
+        let result = res.json();
+        this.dbMessage = result;
+        console.log(this.dbMessage);
+        localStorage.setItem("chatId",result._id);
+      },
+      error => console.log(error)
+    );
+    this.clearAndScroll();
+  }
+
+  clearAndScroll(){
     setTimeout(() => {
+      this.message = '';
       let elem = document.getElementById('chatModal');
       elem.scrollIntoView(false);
-    }, 15);
+    }, 50);
   }
 
   ngOnInit() {
