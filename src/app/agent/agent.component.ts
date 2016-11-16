@@ -22,11 +22,43 @@ export class AgentComponent implements OnInit, OnDestroy {
 
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user, this.currentChat.id, 'agent');
-    this.agentMsg = '';
+    this.updateDb(this.currentChat.dbId);
+  }
+  updateDb(id){
+    let msgToPush = {
+      message:this.agentMsg,
+      sender:'agent',
+      socketId:this.currentChat.id,
+      time: new Date()
+    };
+    //this.dbMessage.messages.push(msgToPush);
+    this.chatService.editChat(id, msgToPush).subscribe(
+      res => {},
+      error => console.log('error')
+    );
+    this.clearAndScroll();
+  }
+
+  clearAndScroll(){
     setTimeout(() => {
-      let elem = document.getElementById('agentChatBody');
+      this.agentMsg = '';
+      let elem = document.getElementById('chatModal');
       elem.scrollIntoView(false);
-    }, 15);
+    }, 50);
+  }
+
+  getId(chat){
+    this.currentChat=chat;
+    this.chatService.getChats().subscribe(message => {
+      for (let x of message){
+        for(let y of x.messages){
+          if (this.currentChat.id === y.socketId){
+            return this.currentChat.dbId = x._id;
+          }
+        }
+      }
+    });
+    console.log(this.currentChat);
   }
 
   ngOnInit() {
@@ -48,6 +80,7 @@ export class AgentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.connection.unsubscribe();
+    localStorage.clear(); //just for dev, remove for production!!!
   }
 
 }

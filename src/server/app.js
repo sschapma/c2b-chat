@@ -87,6 +87,14 @@ db.once('open', function() {
     });
   });
 
+  app.get('/chats/find', function(req, res) {
+    Chat.findOne({'messages.socketId':req}, function(err, obj) {
+      if(err) return console.error(err);
+      res.json(obj);
+      console.log(obj);
+    });
+  });
+
   // create
   app.post('/chat', function(req, res) {
     var obj = new Chat(req.body);

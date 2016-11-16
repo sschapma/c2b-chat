@@ -22,16 +22,7 @@ export class ChatService {
   }
 
   agentMessage(message, userName, id, agent) {
-    this.socket.emit('add-message', message, id, userName, agent);
-    let chat = {
-      userName: userName,
-      socketId: id,
-      messages: {
-        message:message,
-        sender:'agent'
-      }
-    };
-    this.addChat(chat);
+    this.socket.emit('add-message', message, userName, id, agent);
   }
 
 
