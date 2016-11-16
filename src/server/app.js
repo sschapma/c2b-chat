@@ -159,11 +159,11 @@ db.once('open', function() {
       console.log('user disconnected');
     });
 
-    socket.on('add-message', (message, userName, chatId, agent) => {
+    socket.on('add-message', (message, userName, dbId, chatId, agent) => {
       if (agent){
         io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       }else{
-        io.emit('message', {type:'new-message', sender: 'client', id: userId, content: message, user: userName});
+        io.emit('message', {type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
       }
       console.log(message);
     });

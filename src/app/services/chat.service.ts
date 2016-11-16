@@ -17,12 +17,12 @@ export class ChatService {
 
   constructor(private http: Http) { }
 
-  sendMessage(message, userName, id){
-    this.socket.emit('add-message', message, userName);
+  sendMessage(message, userName, dbId){
+    this.socket.emit('add-message', message, userName, dbId);
   }
 
-  agentMessage(message, userName, id, agent) {
-    this.socket.emit('add-message', message, userName, id, agent);
+  agentMessage(message, userName, dbId, id, agent) {
+    this.socket.emit('add-message', message, userName, dbId, id, agent);
   }
 
 

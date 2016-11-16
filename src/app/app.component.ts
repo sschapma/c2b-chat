@@ -24,10 +24,10 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private chatService:ChatService) {}
 
   sendMessage(){
-    this.chatService.sendMessage(this.message, this.userName, this.id);
     let x = localStorage.getItem("chatId");
     if (x){
       this.updateDb(x);
+      this.chatService.sendMessage(this.message, this.userName, x);
     }else{
       this.saveToDb();
     }
@@ -67,7 +67,12 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       error => console.log(error)
     );
-    this.clearAndScroll(true);
+    setTimeout(() => {
+      let g = localStorage.getItem("chatId");
+      console.log(g);
+      this.chatService.sendMessage(this.message, this.userName, g);
+      this.clearAndScroll(true);
+    }, 500);
   }
 
   clearAndScroll(clear){
