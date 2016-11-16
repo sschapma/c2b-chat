@@ -44,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
       res => {},
       error => console.log('error')
     );
-    this.clearAndScroll();
+    this.clearAndScroll(true);
   }
 
   saveToDb(){
@@ -67,12 +67,12 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       error => console.log(error)
     );
-    this.clearAndScroll();
+    this.clearAndScroll(true);
   }
 
-  clearAndScroll(){
+  clearAndScroll(clear){
     setTimeout(() => {
-      this.message = '';
+      if (clear){this.message = '';}
       let elem = document.getElementById('chatModal');
       elem.scrollIntoView(false);
     }, 50);
@@ -97,6 +97,7 @@ export class AppComponent implements OnInit, OnDestroy {
     let prev = localStorage.getItem("chatId") || '';
     this.connection = this.chatService.getMessages().subscribe(message => {
       this.messages.push(message);
+      this.clearAndScroll(false);
     });
     setTimeout(() => {
       this.id = this.chatService.sessionId;
@@ -128,6 +129,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.showChatModal = true;
       setTimeout(() => {
         document.getElementById("chatMsg").focus();
+        this.clearAndScroll(false);
       }, 50);
     }else{
       this.noUserName = true;
@@ -140,6 +142,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.showChatModal = true;
       setTimeout(() => {
         document.getElementById("chatMsg").focus();
+        this.clearAndScroll(false);
       }, 50);
     };
   }
