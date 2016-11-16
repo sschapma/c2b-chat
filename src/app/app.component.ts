@@ -78,21 +78,39 @@ export class AppComponent implements OnInit, OnDestroy {
     }, 50);
   }
 
+  prevMsg(id){
+    let scope = this;
+    this.chatService.findChat(id).subscribe(message => {
+      for (let x of message.messages){
+        let sentBy = x.sender=='agent' ? 'agent' : 'client';
+        let localUser = localStorage.getItem('userName');
+        let chgFormat = {
+          type: "new-message", sender: sentBy,
+          id: this.id, content: x.message, user: localUser
+        };
+        scope.messages.push(chgFormat);
+      }
+    });
+  }
+
   ngOnInit() {
+    let prev = localStorage.getItem("chatId") || '';
     this.connection = this.chatService.getMessages().subscribe(message => {
       this.messages.push(message);
     });
     setTimeout(() => {
       this.id = this.chatService.sessionId;
-      console.log(this.chatService.sessionId);
+      if (prev){
+        this.prevMsg(prev);
+      };
     }, 3000);
   }
 
-  mySession(user, id){
+  mySession(message){
     if (!this.id){
       this.id = this.chatService.sessionId;
     }
-    if (user && user==this.userName && this.id && this.id == id){
+    if (message.user && message.user==this.userName && this.id && this.id == message.id){
       return true;
     }
     return false;

@@ -110,6 +110,7 @@ db.once('open', function() {
     Chat.findOne({_id: req.params.id}, function(err, obj) {
       if(err) return console.error(err);
       res.json(obj);
+      console.log(obj);
     })
   });
 

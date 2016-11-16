@@ -50,6 +50,10 @@ export class ChatService {
       return this.http.get('/chats').map(res => res.json());
     }
 
+    findChat(id) {
+      return this.http.get(`/chat/${id}`).map(res => res.json());
+    }
+
     addChat(chat) {
       //console.log(JSON.parse(chat));
       return this.http.post("/chat", JSON.stringify(chat), this.options);

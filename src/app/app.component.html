@@ -31,7 +31,7 @@
     <ul>
       <li style="list-style-type:none;">
         <div class="agent"><span>Hi {{userName}}! How can I help you?</span></div><div class="clear"></div>
-        <span *ngFor="let message of messages"><span *ngIf="mySession(message.user,message.id)">
+        <span *ngFor="let message of messages"><span *ngIf="mySession(message)">
           <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
           <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
           <div class="clear"></div>
