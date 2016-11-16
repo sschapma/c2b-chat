@@ -19,12 +19,15 @@
 </div>
 
 <div class="chat">
-  <button (click)="namePrompt()" id="chatBtn" class="btn btn-lg btn-primary open-chat-btn"><i class="fa fa-comments fa-3x adj-icon" aria-hidden="true"></i></button>
-  <div id="name" class="name-prompt" style="display:none;">
+
+  <button *ngIf="showChatBtn" (click)="namePrompt()" id="chatBtn" class="btn btn-lg btn-primary open-chat-btn"><i class="fa fa-comments fa-3x adj-icon" aria-hidden="true"></i></button>
+
+  <div id="name" class="name-prompt" *ngIf="noUserName">
     <h3>What is your name?</h3>
     <input (keyup.enter)="openChat()" class="form-control" autofocus="" type="text" id="userName" [(ngModel)]="userName" />
   </div>
-  <div id="chatModal" style="display:none;">
+
+  <div id="chatModal" *ngIf="showChatModal">
     <ul>
       <li style="list-style-type:none;">
         <div class="agent"><span>Hi {{userName}}! How can I help you?</span></div><div class="clear"></div>
@@ -35,7 +38,6 @@
         </span></span>
       </li>
     </ul>
-    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" class="form-control chat-input" type="text" id="chatMsg" />
-    <!--<input (keyup.enter)="sendChat()" class="form-control chat-input" type="text" id="chatMsg" [(ngModel)]="chatMsg" />-->
+    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" autofocus="" class="form-control chat-input" type="text" id="chatMsg" />
   </div>
 </div>

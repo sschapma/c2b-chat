@@ -17,6 +17,9 @@ export class AppComponent implements OnInit, OnDestroy {
   connection;
   message;
   id;
+  public noUserName:boolean = false;
+  public showChatBtn:boolean = true;
+  public showChatModal:boolean = false;
 
   constructor(private chatService:ChatService) {}
 
@@ -60,6 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.dbMessage = result;
         console.log(this.dbMessage);
         localStorage.setItem("chatId",result._id);
+        localStorage.setItem("userName",this.userName);
       },
       error => console.log(error)
     );
@@ -99,30 +103,26 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   namePrompt(){
-    $('#chatBtn').hide();
-    $('#name').show();
-    $('#userName').focus();
+    this.showChatBtn = false;
+    let getName = localStorage.getItem('userName');
+    if(getName){
+      this.userName = getName;
+      this.showChatModal = true;
+      setTimeout(() => {
+        document.getElementById("chatMsg").focus();
+      }, 50);
+    }else{
+      this.noUserName = true;
+    }
   }
 
   openChat(){
     if(this.userName){
-      $('#name').hide();
-      $('#chatModal').show();
-      $('#chatMsg').focus();
-    };
-  }
-  sendChat(){
-      let msg = $('#chatMsg').val();
-      if (!msg){ return };
-      $('#chatMsg').val('');
-      let tempMsg = {
-        sender:'client',
-        content:msg
-      };
-      this.messages.push(tempMsg);
+      this.noUserName = false;
+      this.showChatModal = true;
       setTimeout(() => {
-        let elem = document.getElementById('chatModal');
-        elem.scrollIntoView(false);
-      }, 15);
+        document.getElementById("chatMsg").focus();
+      }, 50);
+    };
   }
 }

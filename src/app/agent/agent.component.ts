@@ -80,7 +80,6 @@ export class AgentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.connection.unsubscribe();
-    localStorage.clear(); //just for dev, remove for production!!!
   }
 
 }
