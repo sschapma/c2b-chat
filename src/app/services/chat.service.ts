@@ -35,9 +35,9 @@ export class ChatService {
       this.socket.on('message', (data) => {
         observer.next(data);
       });
-      this.socket.on('agent-message', (data) => {
+      /*this.socket.on('agent-message', (data) => {
         observer.next(data);
-      });
+      });*/
       return () => {
         this.socket.disconnect();
       };

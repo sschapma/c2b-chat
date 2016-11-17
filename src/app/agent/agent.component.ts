@@ -43,8 +43,11 @@ export class AgentComponent implements OnInit, OnDestroy {
   clearAndScroll(){
     setTimeout(() => {
       this.agentMsg = '';
-      let elem = document.getElementById('chatModal');
-      //elem.scrollIntoView(false);
+      //let element = document.getElementById('agentChatBody');
+      //if (element != null){
+        //element.scrollIntoView(false); //doesnt work, have no idea why
+        //console.log(element);
+      //};
     }, 50);
   }
 
@@ -67,11 +70,26 @@ export class AgentComponent implements OnInit, OnDestroy {
        }
     });
     this.connection = this.chatService.getMessages().subscribe(message => {
-      this.messages.push(message);
+      if (message && message["sender"] !== 'agent'){
+        this.messages.push(message);
+      }else if (message){
+        let tempMsg = {
+          content:message["content"],dbId:this.currentChat.dbId,
+          id:this.currentChat.id ||'', sender:"agent",type:"new-message",
+          user:this.currentChat.user
+        };
+        console.log(tempMsg);
+        this.messages.push(tempMsg);
+      }
       let x = {id:message["id"],user:message["user"],dbId:message["dbId"]};
-      this.activeList(x);
+      if (x.id && x.user && x.dbId){
+        this.activeList(x);
+      }
     });
-    console.log('asdfasd');
+  }
+  getInfo(chat){
+    console.log(chat);
+    this.currentChat = chat;
   }
 
   ngOnDestroy() {
@@ -79,7 +97,9 @@ export class AgentComponent implements OnInit, OnDestroy {
   }
   activeList(x){
     let idExists = false;
+    //console.log(x);
     for (let i=0;i<this.activeChats.length;i++){
+      //console.log(this.activeChats[i]);
       if(this.activeChats[i].dbId == x.dbId){
         idExists=true;
       };

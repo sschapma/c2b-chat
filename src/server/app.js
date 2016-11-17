@@ -148,29 +148,31 @@ db.once('open', function() {
     console.log('user connected');
     let userId = socket.id;
     openSockets.push(userId);
-    console.log(openSockets);
+    //console.log(openSockets);
     io.to(socket.id).emit("abc", socket.id);
     io.to(socket.id).emit("agent", openSockets);
 
     socket.on('disconnect', function(){
       let socketIndex = openSockets.indexOf(userId);
       openSockets.splice(socketIndex,1);
-      console.log(openSockets);
+      //console.log(openSockets);
       console.log('user disconnected');
     });
 
     socket.on('add-message', (message, userName, dbId, chatId, agent) => {
       if (agent){
+        let a = {message:message,userName:userName,dbId:dbId,id:chatId,agent:agent};
+        console.log(a);
         io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       }else{
         io.emit('message', {type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
       }
-      console.log(message);
+      console.log('line 171' + message);
     });
-    socket.on('agent-message', (message, chatId, userName) => {
+    /*socket.on('agent-message', (message, chatId, userName) => {
       io.to(chatId).emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       console.log(message);
-    });
+    });*/
   });
 
   http.listen(app.get('port'), function() {

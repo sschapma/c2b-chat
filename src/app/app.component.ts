@@ -86,22 +86,35 @@ export class AppComponent implements OnInit, OnDestroy {
   prevMsg(id){
     let scope = this;
     this.chatService.findChat(id).subscribe(message => {
+      if (message){
       for (let x of message.messages){
         let sentBy = x.sender=='agent' ? 'agent' : 'client';
         let localUser = localStorage.getItem('userName');
         let chgFormat = {
           type: "new-message", sender: sentBy,
-          id: this.id, content: x.message, user: localUser
+          id: this.id, content: x.message, user: localUser, dbId:message._id
         };
         scope.messages.push(chgFormat);
       }
+     }
     });
   }
 
   ngOnInit() {
     let prev = localStorage.getItem("chatId") || '';
     this.connection = this.chatService.getMessages().subscribe(message => {
-      this.messages.push(message);
+
+      if (message && message["sender"] !== 'agent'){
+        this.messages.push(message);
+      }else if (message){
+        let tempMsg = {
+          content:message["content"],dbId:localStorage.getItem("chatId"),
+          id:this.id ||'', sender:"agent",type:"new-message",
+          user:message["user"]
+        };
+        console.log(tempMsg);
+        this.messages.push(tempMsg);
+      }
       this.clearAndScroll(false);
     });
     setTimeout(() => {
@@ -113,10 +126,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   mySession(message){
+    let x = localStorage.getItem("chatId");
     if (!this.id){
       this.id = this.chatService.sessionId;
     }
-    if (message.user && message.user==this.userName && this.id && this.id == message.id){
+    if (message.user && message.user==this.userName && x && x == message.dbId){
       return true;
     }
     return false;
