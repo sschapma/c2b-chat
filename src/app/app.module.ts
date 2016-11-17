@@ -13,6 +13,7 @@ import * as io from 'socket.io-client';
 
 import { ToastComponent } from './shared/toast/toast.component';
 import { AgentComponent } from './agent/agent.component';
+import { ChatComponent } from './chat/chat.component';
 
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
@@ -26,7 +27,8 @@ const routing = RouterModule.forRoot([
     HomeComponent,
     AboutComponent,
     ToastComponent,
-    AgentComponent
+    AgentComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

@@ -45,8 +45,7 @@ export class AgentComponent implements OnInit, OnDestroy {
       this.agentMsg = '';
       //let element = document.getElementById('agentChatBody');
       //if (element != null){
-        //element.scrollIntoView(false); //doesnt work, have no idea why
-        //console.log(element);
+        //element.scrollIntoView(false); //doesnt work, because chat needs to move to component
       //};
     }, 50);
   }
@@ -78,7 +77,6 @@ export class AgentComponent implements OnInit, OnDestroy {
           id:this.currentChat.id ||'', sender:"agent",type:"new-message",
           user:this.currentChat.user
         };
-        console.log(tempMsg);
         this.messages.push(tempMsg);
       }
       let x = {id:message["id"],user:message["user"],dbId:message["dbId"]};
@@ -88,7 +86,6 @@ export class AgentComponent implements OnInit, OnDestroy {
     });
   }
   getInfo(chat){
-    console.log(chat);
     this.currentChat = chat;
   }
 
@@ -97,16 +94,13 @@ export class AgentComponent implements OnInit, OnDestroy {
   }
   activeList(x){
     let idExists = false;
-    //console.log(x);
     for (let i=0;i<this.activeChats.length;i++){
-      //console.log(this.activeChats[i]);
       if(this.activeChats[i].dbId == x.dbId){
         idExists=true;
       };
     };
     if (!idExists){
       this.activeChats.push(x);
-      //console.log(this.activeChats);
     };
   }
 

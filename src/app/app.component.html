@@ -18,26 +18,4 @@
 
 </div>
 
-<div class="chat">
-
-  <button *ngIf="showChatBtn" (click)="namePrompt()" id="chatBtn" class="btn btn-lg btn-primary open-chat-btn"><i class="fa fa-comments fa-3x adj-icon" aria-hidden="true"></i></button>
-
-  <div id="name" class="name-prompt" *ngIf="noUserName">
-    <h3>What is your name?</h3>
-    <input (keyup.enter)="openChat()" class="form-control" autofocus="" type="text" id="userName" [(ngModel)]="userName" />
-  </div>
-
-  <div id="chatModal" *ngIf="showChatModal">
-    <ul>
-      <li style="list-style-type:none;">
-        <div class="agent"><span>Hi {{userName}}! How can I help you?</span></div><div class="clear"></div>
-        <span *ngFor="let message of messages"><span *ngIf="mySession(message)">
-          <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
-          <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
-          <div class="clear"></div>
-        </span></span>
-      </li>
-    </ul>
-    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" autofocus="" class="form-control chat-input" type="text" id="chatMsg" />
-  </div>
-</div>
+<chat></chat>
