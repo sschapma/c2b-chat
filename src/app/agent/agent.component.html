@@ -9,7 +9,10 @@
 </div>
 
 <div *ngIf="currentChat" class="panel panel-primary custom-panel" id="agentChatBody">
-  <div class="panel-heading text-center chatRadius">{{currentChat.user}}</div>
+  <div class="panel-heading text-center chatRadius">
+    {{currentChat.user}}
+    <span data-toggle="modal" data-target="#deleteChat" class="pull-right"><i title="Delete Chat" class="fa fa-remove icon-adjust"></i></span>
+  </div>
   <div class="panel-body full-length">
   <ul>
     <li style="list-style-type:none;">
@@ -25,4 +28,29 @@
   <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" autofocus="" class="form-control agent-input" type="text" id="agentMsg" />
 </div>
 </div>
+
+<!-- Modal -->
+<div id="deleteChat" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h6 class="modal-title modal-title-style">Delete Chat Verification</h6>
+      </div>
+      <div class="modal-body text-center">
+        <h4>Are you sure you want delete {{currentChat?.user}}'s chat history?</h4>
+        <small>You will not be able to undo this!</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal" (click)="deleteChat();">DELETE</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-toast [message]="toast.message"></app-toast>
+
 </div>

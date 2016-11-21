@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatService }       from '../services/chat.service';
+import { ToastComponent } from '../shared/toast/toast.component';
 
 @Component({
   selector: 'app-agent',
@@ -19,7 +20,8 @@ export class AgentComponent implements OnInit, OnDestroy {
   id;
   chatId;
 
-  constructor(private chatService:ChatService) {}
+  constructor(private chatService:ChatService,
+              private toast: ToastComponent) {}
 
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user,this.currentChat.dbId, this.currentChat.id, 'agent');
@@ -38,6 +40,18 @@ export class AgentComponent implements OnInit, OnDestroy {
       error => console.log('error')
     );
     this.clearAndScroll();
+  }
+  deleteChat() {
+    let chat = this.currentChat;
+    this.chatService.deleteChat(chat.dbId).subscribe(
+      res => {
+        var pos = this.activeChats.map(chat => { return chat.dbId }).indexOf(chat.dbId);
+        this.activeChats.splice(pos, 1);
+        this.currentChat = '';
+        this.toast.setMessage("item deleted successfully.", "success");
+      },
+      error => console.log(error)
+    );
   }
 
   clearAndScroll(){

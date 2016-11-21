@@ -63,7 +63,7 @@ export class ChatService {
       return this.http.put(`/chat/${id}`, JSON.stringify(chat), this.options);
     }
 
-    deleteChat(chat) {
-      return this.http.delete(`/chat/${chat._id}`, this.options);
+    deleteChat(id) {
+      return this.http.delete(`/chat/${id}`, this.options);
     }
 }
