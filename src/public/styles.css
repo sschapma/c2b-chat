@@ -3,9 +3,12 @@ body, .container {
     height: 100%;
     overflow:hidden;
 }
-.icon-adjust:hover{
+.icon-adjust:hover,.comment-min:hover{
   cursor: pointer;
   font-size: 1.2em;
+}
+.comment-min{
+  float:right;
 }
 .modal-title-style{
   color:white;

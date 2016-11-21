@@ -59,6 +59,10 @@ export class ChatService {
       return this.http.post("/chat", JSON.stringify(chat), this.options);
     }
 
+    sendComment(comment) {
+      return this.http.post("/sendEmail", JSON.stringify(comment), this.options);
+    }
+
     editChat(id, chat) {
       return this.http.put(`/chat/${id}`, JSON.stringify(chat), this.options);
     }

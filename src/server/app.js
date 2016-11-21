@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var nodemailer = require('nodemailer');
 app.set('port', (process.env.PORT || 3000));
 
 app.use('/', express.static(__dirname + '/../../dist'));
@@ -126,6 +127,34 @@ db.once('open', function() {
       }
     );
   });
+
+  // send Email when no agents are online
+  app.post('/sendEmail', function(req, res) {
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'user@gmail.com', // Your email id
+            pass: 'password' // Your password
+        }
+    });
+    var mailOptions = {
+        from: '"NEW CUSTOMER" <user@gmail.com>', // sender address
+        replyTo: req.body.email,
+        to: 'user@gmail.com', // list of receivers
+        subject: 'New Customer Email from ' + req.body.name, // Subject line
+        text: req.body.comment //, // plaintext body
+        // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            res.json({yo: 'error'});
+        }else{
+            console.log('Message sent: ' + info.response);
+            res.json({yo: info.response});
+        }
+      });
+    });
 
 
   // delete by id
