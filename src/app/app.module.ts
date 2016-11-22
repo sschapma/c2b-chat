@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { DataService } from './services/data.service';
 import { ChatService } from './services/chat.service';
+import { AuthService } from './services/auth.service';
 import * as io from 'socket.io-client';
 
 import { ToastComponent } from './shared/toast/toast.component';
@@ -40,6 +41,7 @@ const routing = RouterModule.forRoot([
   providers: [
     DataService,
     ChatService,
+    AuthService,
     ToastComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

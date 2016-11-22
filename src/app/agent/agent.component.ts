@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatService }       from '../services/chat.service';
 import { ToastComponent } from '../shared/toast/toast.component';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-agent',
   templateUrl: './agent.component.html',
   styleUrls: ['./agent.component.css'],
-  providers: [ChatService]
+  providers: [ChatService, AuthService]
 })
 export class AgentComponent implements OnInit, OnDestroy {
   public messages:any = [];
@@ -21,7 +22,15 @@ export class AgentComponent implements OnInit, OnDestroy {
   chatId;
 
   constructor(private chatService:ChatService,
-              private toast: ToastComponent) {}
+              private toast: ToastComponent,
+              private auth: AuthService) {}
+
+  login() {
+    this.auth.login();
+  }
+  logout() {
+    this.auth.logout();
+  }
 
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user,this.currentChat.dbId, this.currentChat.id, 'agent');
@@ -66,6 +75,7 @@ export class AgentComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.login();
     $('.chat').hide();
     this.chatService.getChats().subscribe(message => {
       //{content:"asdf",dbId:"582c3a7f88207c40b4312c4e",id:"JmszF8ZEIlqwSfTRAAAF",

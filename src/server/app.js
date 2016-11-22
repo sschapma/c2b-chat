@@ -6,6 +6,10 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var nodemailer = require('nodemailer');
+var jwt = require('express-jwt');
+var cors = require('cors');
+
+app.use(cors());
 app.set('port', (process.env.PORT || 3000));
 
 app.use('/', express.static(__dirname + '/../../dist'));
@@ -20,6 +24,11 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test');
 var db = mongoose.connection;
 mongoose.Promise = global.Promise;
+
+var authCheck = jwt({
+  secret: new Buffer('g0Ha8D0mM6TJrTZIfxxz6Ey4ewb2gX7wDJK8daUum09ywGueaLqhF2ti2kMmL-nc', 'base64'),
+  audience: 'tryydia9RW5tOc27TNg3sacg32RNjNcf' //client-id
+});
 
 // Models
 var Cat = require('./cat.model.js');
