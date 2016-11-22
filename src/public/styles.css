@@ -13,6 +13,9 @@ body, .container {
 .modal-title-style{
   color:white;
 }
+.logout:hover{
+  cursor: pointer;
+}
 .chat {
     position:fixed;
     bottom:35px;

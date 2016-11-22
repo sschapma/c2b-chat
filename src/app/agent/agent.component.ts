@@ -31,6 +31,9 @@ export class AgentComponent implements OnInit, OnDestroy {
   logout() {
     this.auth.logout();
   }
+  isLoggedIn(){
+    return this.auth.loggedIn();
+  }
 
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user,this.currentChat.dbId, this.currentChat.id, 'agent');
@@ -75,8 +78,9 @@ export class AgentComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.login();
-    $('.chat').hide();
+    if(!this.isLoggedIn()){
+      this.login();
+    }
     this.chatService.getChats().subscribe(message => {
       //{content:"asdf",dbId:"582c3a7f88207c40b4312c4e",id:"JmszF8ZEIlqwSfTRAAAF",
        //sender:"client",type:"new-message",user:"Julian"}

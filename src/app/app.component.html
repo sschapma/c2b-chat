@@ -12,10 +12,13 @@
         <i class="fa fa-info-circle"></i> Agent
       </a>
     </div>
+    <div *ngIf="isLoggedIn()" class="nav navbar-nav pull-right">
+      <a (click)="auth.logout()" class="nav-item nav-link logout">
+        <i class="fa fa-sign-out"></i>Logout
+      </a>
+    </div>
   </nav>
 
   <router-outlet></router-outlet>
 
 </div>
-
-<chat></chat>

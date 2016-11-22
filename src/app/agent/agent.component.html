@@ -1,9 +1,4 @@
-<div class="toolbar">
-  <button (click)="auth.login()">Login</button>
-  <button (click)="auth.logout()">Logout</button>
-</div>
-
-<div class="agent-container">
+<div *ngIf="isLoggedIn()" class="agent-container">
 <div class="panel panel-primary chat-list">
   <div class="panel-heading activeRadius">Active Chats</div>
   <div class="panel-body active-sidebar">

@@ -22,7 +22,7 @@
       <tbody *ngIf="cats.length === 0">
         <tr>
           <td colspan="4">There are no cats in the DB. Add a new cat below.</td>
-        </tr>  
+        </tr>
       </tbody>
       <tbody *ngIf="!isEditing">
         <tr *ngFor="let cat of cats">
@@ -32,7 +32,7 @@
           <td>
             <button class="btn btn-sm btn-warning" (click)="enableEditing(cat)"><i class="fa fa-pencil"></i> Edit</button> <button class="btn btn-sm btn-danger" (click)="deleteCat(cat)"><i class="fa fa-trash"></i> Delete</button>
           </td>
-        </tr>  
+        </tr>
       </tbody>
       <tbody *ngIf="isEditing">
         <tr>
@@ -74,3 +74,5 @@
     </form>
   </div>
 </div>
+
+<chat></chat>

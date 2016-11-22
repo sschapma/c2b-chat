@@ -6,9 +6,16 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class AuthService {
+  clientId = 'tryydia9RW5tOc27TNg3sacg32RNjNcf';
+  domain = 'sschapma.auth0.com';
+  options = {
+    closable:false,
+    allowSignUp: false,
+    rememberLastLogin: false,
+    allowForgotPassword: false
+  };
   // We'll use the Auth0 Lock widget for capturing user credentials
-  lock = new Auth0Lock('tryydia9RW5tOc27TNg3sacg32RNjNcf',
-                       'sschapma.auth0.com');
+  lock = new Auth0Lock(this.clientId, this.domain, this.options);
 
   constructor(private router: Router) {
     // We'll listen for an authentication event to be raised and if successful will log the user in.
@@ -40,7 +47,7 @@ export class AuthService {
     localStorage.removeItem('id_token');
 
     // Send the user back to the public deals page after logout
-    this.router.navigateByUrl('/agent');
+    this.router.navigateByUrl('/');
   }
 
   // Finally, this method will check to see if the user is logged in. We'll be able to tell by checking to see if they have a token and whether that token is valid or not.
