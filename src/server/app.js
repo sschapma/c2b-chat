@@ -33,12 +33,21 @@ var authCheck = jwt({
 // Models
 var Cat = require('./cat.model.js');
 var Chat = require('./chat.model.js');
+//var Agent = require('./agent.model.js');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Connected to MongoDB');
-
+  var agentStatus = {isOnline:false};
   // APIs
+  app.get('/agentStatus', function(req, res) {
+    res.json(agentStatus);
+  });
+  app.post('/agentStatus', function(req, res) {
+    agentStatus = req.body;
+    res.json(agentStatus);
+  });
+
   // select all
   app.get('/cats', function(req, res) {
     Cat.find({}, function(err, docs) {

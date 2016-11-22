@@ -29,6 +29,7 @@ export class AgentComponent implements OnInit, OnDestroy {
     this.auth.login();
   }
   logout() {
+    this.chatService.agentOffline().subscribe(agent => {});
     this.auth.logout();
   }
   isLoggedIn(){
@@ -112,6 +113,12 @@ export class AgentComponent implements OnInit, OnDestroy {
         this.activeList(x);
       }
     });
+    this.chatService.agentOnline().subscribe(agent => {});
+    setTimeout(() => {
+      this.chatService.getAgent().subscribe(agent => {
+        console.log(agent);
+      });
+    }, 5000);
   }
   getInfo(chat){
     this.currentChat = chat;
@@ -119,6 +126,7 @@ export class AgentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.connection.unsubscribe();
+    this.chatService.agentOffline().subscribe(agent => {});
   }
   activeList(x){
     let idExists = false;

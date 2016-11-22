@@ -126,6 +126,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.chatService.getAgent().subscribe(agent => {
+      this.agentAvailable = agent.isOnline;
+    });
     let prev = localStorage.getItem("chatId") || '';
     this.connection = this.chatService.getMessages().subscribe(message => {
 

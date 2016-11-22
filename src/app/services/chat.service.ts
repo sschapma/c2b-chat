@@ -58,6 +58,17 @@ export class ChatService {
       //console.log(JSON.parse(chat));
       return this.http.post("/chat", JSON.stringify(chat), this.options);
     }
+    getAgent() {
+      return this.http.get('/agentStatus').map(res => res.json());
+    }
+    agentOnline() {
+      let agent = {isOnline:true};
+      return this.http.post("/agentStatus", JSON.stringify(agent), this.options);
+    }
+    agentOffline() {
+      let agent = {isOnline:false};
+      return this.http.post("/agentStatus", JSON.stringify(agent), this.options);
+    }
 
     sendComment(comment) {
       return this.http.post("/sendEmail", JSON.stringify(comment), this.options);

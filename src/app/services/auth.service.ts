@@ -6,6 +6,7 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class AuthService {
+
   clientId = 'tryydia9RW5tOc27TNg3sacg32RNjNcf';
   domain = 'sschapma.auth0.com';
   options = {
