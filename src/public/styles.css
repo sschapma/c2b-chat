@@ -3,12 +3,17 @@ body, .container {
     height: 100%;
     overflow:hidden;
 }
-.icon-adjust:hover,.comment-min:hover{
+.icon-adjust:hover,.comment-min:hover,.chat-min:hover{
   cursor: pointer;
   font-size: 1.2em;
 }
 .comment-min{
   float:right;
+}
+.chat-min{
+  position:fixed;
+  right:50px;
+  z-index:5;
 }
 .modal-title-style{
   color:white;
@@ -29,6 +34,7 @@ body, .container {
     overflow-x:hidden;
     overflow-y: auto;
     width:30%;
+    background-color: rgba(255, 255, 255, 0.7)
 }
 .panel-adjust{
   margin-bottom:0;
@@ -37,7 +43,9 @@ body, .container {
   border-radius:100%;
   height:80px;
   width:80px;
-  float:right;
+  position:absolute;
+  bottom:20px;
+  right:20px;
 }
 .adj-icon{
   margin-left:-15px;
@@ -48,6 +56,7 @@ body, .container {
   bottom:5px;
   right:40px;
   width:27.5%;
+  z-index:3;
 }
 .clear {
   clear: both;
@@ -97,6 +106,7 @@ body, .container {
 	color: black;
   max-width: 80%;
   float: left;
+  margin-left:-13px;
 }
 
 .agent:before {
@@ -119,7 +129,7 @@ body, .container {
 	left:4px;
 	width:26px;
 	height:20px;
-	background:white;
+	background-color: rgba(255, 255, 255, 0.8);
 	border-bottom-right-radius: 10px;
 	-webkit-transform:translate(-30px, -2px);
 }

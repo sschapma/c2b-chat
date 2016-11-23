@@ -1,58 +1,67 @@
 <div *ngIf="isLoggedIn()" class="agent-container">
-<div class="panel panel-primary chat-list">
-  <div class="panel-heading activeRadius">Active Chats</div>
-  <div class="panel-body active-sidebar">
-      <div *ngFor="let chat of activeChats" (click)="getInfo(chat);" class="user-div" [ngClass]="{ 'active': chat == currentChat }">
-        <h6 style="margin:0;">{{chat.user}}
-          <span *ngIf="newMessage(chat)"><i class="fa fa-circle" style="color:green;"></i></span>
-        </h6>
-      </div>
-  </div>
-</div>
 
-<div *ngIf="currentChat" class="panel panel-primary custom-panel" id="agentChatBody">
-  <div class="panel-heading text-center chatRadius">
-    {{currentChat.user}}
-    <span data-toggle="modal" data-target="#deleteChat" class="pull-right"><i title="Delete Chat" class="fa fa-remove icon-adjust"></i></span>
+  <div class="panel panel-primary chat-list">
+    <div class="panel-heading activeRadius">Active Chats</div>
+    <div class="panel-body active-sidebar">
+        <div *ngFor="let chat of activeChats" (click)="getInfo(chat);" class="user-div" [ngClass]="{ 'active': chat == currentChat }">
+          <h6 style="margin:0;">{{chat.user}}
+            <span *ngIf="newMessage(chat)"><i class="fa fa-circle" style="color:green;"></i></span>
+          </h6>
+        </div>
+    </div>
   </div>
-  <div class="panel-body full-length">
-  <ul>
-    <li style="list-style-type:none;">
-      <span *ngFor="let message of messages"><span *ngIf="message.dbId==currentChat?.dbId">
-        <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
-        <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
-        <div class="clear"></div>
-      </span></span>
-    </li>
-  </ul>
-</div>
-<div class="panel-footer">
-  <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" autofocus="" class="form-control agent-input" type="text" id="agentMsg" />
-</div>
-</div>
 
-<!-- Modal -->
-<div id="deleteChat" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header bg-danger">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h6 class="modal-title modal-title-style">Delete Chat Verification</h6>
-      </div>
-      <div class="modal-body text-center">
-        <h4>Are you sure you want delete {{currentChat?.user}}'s chat history?</h4>
-        <small>You will not be able to undo this!</small>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-default btn-danger" data-dismiss="modal" (click)="deleteChat();">DELETE</button>
+  <div *ngIf="currentChat" class="panel panel-primary custom-panel">
+
+    <div class="panel-heading text-center chatRadius">
+      {{currentChat.user}}
+      <span data-toggle="modal" data-target="#deleteChat" class="pull-right"><i title="Delete Chat" class="fa fa-remove icon-adjust"></i></span>
+    </div>
+
+    <div class="panel-body full-length">
+      <div id="agentChatBody">
+        <ul>
+          <li style="list-style-type:none;">
+            <span *ngFor="let message of messages"><span *ngIf="message.dbId==currentChat?.dbId">
+              <div *ngIf="message.sender=='agent'" class="agent"><span>{{message.content}}</span></div>
+              <div *ngIf="message.sender=='client'" class="client"><span>{{message.content}}</span></div>
+              <div class="clear"></div>
+            </span></span>
+          </li>
+        </ul>
       </div>
     </div>
 
-  </div>
-</div>
+    <div class="panel-footer">
+      <input [(ngModel)]="agentMsg" (keyup.enter)="agentMessage()" autofocus="" class="form-control agent-input" type="text" id="agentMsg" />
+    </div>
 
-<alert [message]="alert.message"></alert>
+  </div>
+
+  <!-- Delete Chat Modal -->
+  <div id="deleteChat" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header bg-danger">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h6 class="modal-title modal-title-style">Delete Chat Verification</h6>
+        </div>
+
+        <div class="modal-body text-center">
+          <h4>Are you sure you want delete {{currentChat?.user}}'s chat history?</h4>
+          <small>You will not be able to undo this!</small>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default btn-danger" data-dismiss="modal" (click)="deleteChat();">DELETE</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <alert [message]="alert.message"></alert>
 
 </div>

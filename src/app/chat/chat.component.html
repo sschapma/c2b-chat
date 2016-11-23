@@ -1,6 +1,6 @@
-<div class="chat">
+<button *ngIf="showChatBtn" (click)="namePrompt()" id="chatBtn" class="btn btn-lg btn-primary open-chat-btn"><i class="fa fa-comments fa-3x adj-icon" aria-hidden="true"></i></button>
 
-  <button *ngIf="showChatBtn" (click)="namePrompt()" id="chatBtn" class="btn btn-lg btn-primary open-chat-btn"><i class="fa fa-comments fa-3x adj-icon" aria-hidden="true"></i></button>
+<div class="chat">
 
   <div id="name" class="name-prompt" *ngIf="noUserName">
     <h3>What is your name?</h3>
@@ -28,6 +28,8 @@
     </div>
   </div>
 
+  <div class="chat-min" *ngIf="showChatModal"><i (click)="minComment()" class="fa fa-minus"></i></div>
+
   <div id="chatModal" *ngIf="showChatModal">
     <ul>
       <li style="list-style-type:none;">
@@ -41,5 +43,7 @@
     </ul>
     <input [(ngModel)]="message" (keyup.enter)="sendMessage()" autofocus="" class="form-control chat-input" type="text" id="chatMsg" />
   </div>
+
 </div>
+
 <alert [message]="alert.message"></alert>

@@ -14,9 +14,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   public messages:any = [];
   public dbMessage:any = {};
   public userName:string = '';
-  connection;
-  message;
-  id;
+  public connection:any;
+  public message:any;
+  public id:any;
   public agentAvailable:boolean = false;
   public noUserName:boolean = false;
   public showChatBtn:boolean = true;
@@ -32,8 +32,9 @@ export class ChatComponent implements OnInit, OnDestroy {
               private formBuilder: FormBuilder,
               private alert: AlertComponent) {}
 
+  // sends a chat message to socket.io then saves to db
   sendMessage(){
-    let x = localStorage.getItem("chatId");
+    let x = localStorage.getItem("chatId"); //checks if a db id exists
     if (x){
       this.updateDb(x);
       this.chatService.sendMessage(this.message, this.userName, x);
@@ -41,8 +42,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.saveToDb();
     }
   }
+  // if no agent available, sends an email
   sendComment(){
-    //alert(JSON.stringify(this.addCommentForm.value));
     this.chatService.sendComment(this.addCommentForm.value).subscribe(
       res => {
         this.alert.setMessage("message sent successfully.", "success");
@@ -53,10 +54,13 @@ export class ChatComponent implements OnInit, OnDestroy {
       error => console.log('error')
     );
   }
+  //minimizes widget and displays button
   minComment(){
     this.showChatBtn = true;
     this.leaveMessage = false;
+    this.showChatModal = false;
   }
+  //if chat exists, pushes message to it
   updateDb(id){
     let msgToPush = {
       message:this.message,
@@ -64,15 +68,15 @@ export class ChatComponent implements OnInit, OnDestroy {
       socketId:this.id,
       time: new Date()
     };
-    //this.dbMessage.messages.push(msgToPush);
     this.chatService.editChat(id, msgToPush).subscribe(
       res => {},
       error => console.log('error')
     );
     this.clearAndScroll(true);
   }
-
+  //if new chat, creates db entry
   saveToDb(){
+    //chat model
     let chat = {
       userName: this.userName,
       messages: [{
@@ -82,24 +86,24 @@ export class ChatComponent implements OnInit, OnDestroy {
         time: new Date()
       }]
     };
+    //add chat
     this.chatService.addChat(chat).subscribe(
       res => {
         let result = res.json();
         this.dbMessage = result;
-        console.log(this.dbMessage);
         localStorage.setItem("chatId",result._id);
         localStorage.setItem("userName",this.userName);
       },
       error => console.log(error)
     );
+    //gets db id and sets it in local storage
     setTimeout(() => {
       let g = localStorage.getItem("chatId");
-      console.log(g);
       this.chatService.sendMessage(this.message, this.userName, g);
       this.clearAndScroll(true);
-    }, 500);
+    }, 200);
   }
-
+  //clears input and scrolls to bottom of screen
   clearAndScroll(clear){
     setTimeout(() => {
       if (clear){this.message = '';}
@@ -107,7 +111,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       elem.scrollIntoView(false);
     }, 50);
   }
-
+  //this searches db for id and if it exists, pushes all previous messages to messages array
   prevMsg(id){
     let scope = this;
     this.chatService.findChat(id).subscribe(message => {
@@ -124,40 +128,44 @@ export class ChatComponent implements OnInit, OnDestroy {
      }
     });
   }
-
+  //functions to run on page load
   ngOnInit() {
-    this.chatService.getAgent().subscribe(agent => {
-      this.agentAvailable = agent.isOnline;
-    });
-    let prev = localStorage.getItem("chatId") || '';
-    this.connection = this.chatService.getMessages().subscribe(message => {
 
+    let prev = localStorage.getItem("chatId") || ''; //checks for chat history
+    if (prev){this.prevMsg(prev);} //finds chat history by id
+
+    //creates socket.io connection
+    this.connection = this.chatService.getMessages().subscribe(message => {
+      //pushes client message to message array
       if (message && message["sender"] !== 'agent'){
         this.messages.push(message);
       }else if (message){
+        //sets model for agent messages
         let tempMsg = {
           content:message["content"],dbId:localStorage.getItem("chatId"),
           id:this.id ||'', sender:"agent",type:"new-message",
           user:message["user"]
         };
+        //pushes agent message to array
         this.messages.push(tempMsg);
+        //scrolls to bottom
+        this.clearAndScroll(false);
       }
-      this.clearAndScroll(false);
     });
+
+    // timeout to receive sessionId
     setTimeout(() => {
       this.id = this.chatService.sessionId;
-      if (prev){
-        this.prevMsg(prev);
-      };
-    }, 3000);
+    }, 1500);
 
+    //model for email form
     this.addCommentForm = this.formBuilder.group({
       name: this.name,
       email: this.email,
       comment: this.comment
     });
   }
-
+  //verifies session for message filtering
   mySession(message){
     let x = localStorage.getItem("chatId");
     if (!this.id){
@@ -168,30 +176,40 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     return false;
   }
-
+  //unsubscribe from socket.io
   ngOnDestroy() {
     this.connection.unsubscribe();
   }
-
+  //handles what to do on icon click
   namePrompt(){
-    this.showChatBtn = false;
-    if (this.agentAvailable){
-        let getName = localStorage.getItem('userName');
-        if(getName){
-          this.userName = getName;
-          this.showChatModal = true;
-          setTimeout(() => {
-            document.getElementById("chatMsg").focus();
-            this.clearAndScroll(false);
-          }, 50);
-        }else{
-          this.noUserName = true;
+    this.showChatBtn = false; //hides chat button
+    //checks if agent is online
+    this.chatService.getAgent().subscribe(agent => {
+      this.agentAvailable = agent.isOnline;
+    });
+    //short timeout to wait for response
+    setTimeout(() => {
+      if (this.agentAvailable){
+          //checks for chat history
+          let getName = localStorage.getItem('userName');
+          if(getName){
+            this.userName = getName;
+            this.showChatModal = true;
+            setTimeout(() => {
+              document.getElementById("chatMsg").focus();
+              this.clearAndScroll(false);
+            }, 50);
+          }else{
+            //starts new chat
+            this.noUserName = true;
+        }
+      }else{
+        // if no agent, displays email form
+        this.leaveMessage = true;
       }
-    }else{
-      this.leaveMessage = true;
-    }
+    }, 200);
   }
-
+  //opens new chat window
   openChat(){
     if(this.userName){
       this.noUserName = false;
