@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatService }       from '../services/chat.service';
-import { ToastComponent } from '../shared/toast/toast.component';
+import { AlertComponent } from '../shared/alert/alert.component';
 import {AuthService} from '../services/auth.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class AgentComponent implements OnInit, OnDestroy {
   currentDbId;
 
   constructor(private chatService:ChatService,
-              private toast: ToastComponent,
+              private alert: AlertComponent,
               private auth: AuthService) {}
 
   login() {
@@ -74,7 +74,7 @@ export class AgentComponent implements OnInit, OnDestroy {
         var pos = this.activeChats.map(chat => { return chat.dbId }).indexOf(chat.dbId);
         this.activeChats.splice(pos, 1);
         this.currentChat = '';
-        this.toast.setMessage("item deleted successfully.", "success");
+        this.alert.setMessage("item deleted successfully.", "success");
       },
       error => console.log(error)
     );

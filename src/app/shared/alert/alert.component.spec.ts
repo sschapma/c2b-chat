@@ -1,22 +1,23 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
-import { AboutComponent } from './about.component';
+import { AlertComponent } from './alert.component';
 
-describe('Component: About', () => {
-  let component: AboutComponent;
-  let fixture: ComponentFixture<AboutComponent>;
+describe('AlertComponent', () => {
+  let component: AlertComponent;
+  let fixture: ComponentFixture<AlertComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AboutComponent ]
+      declarations: [ AlertComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AboutComponent);
+    fixture = TestBed.createComponent(AlertComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -24,10 +25,4 @@ describe('Component: About', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should display the string "About" in h4', () => {
-    let el = fixture.debugElement.query(By.css('h4')).nativeElement;
-    expect(el.textContent).toContain('About');
-  });
-
 });

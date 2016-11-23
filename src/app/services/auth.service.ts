@@ -7,8 +7,10 @@ declare var Auth0Lock: any;
 @Injectable()
 export class AuthService {
 
+  //my auth0 credentials, replace these with your own
   clientId = 'tryydia9RW5tOc27TNg3sacg32RNjNcf';
   domain = 'sschapma.auth0.com';
+  //auth0 options (adjust these to suit your needs)
   options = {
     closable:false,
     allowSignUp: false,
@@ -22,15 +24,12 @@ export class AuthService {
     // We'll listen for an authentication event to be raised and if successful will log the user in.
     this.lock.on('authenticated', (authResult: any) => {
       localStorage.setItem('id_token', authResult.idToken);
-
       this.lock.getProfile(authResult.idToken, (error: any, profile: any) => {
         if (error) {
           console.log(error);
         }
-
         localStorage.setItem('profile', JSON.stringify(profile));
       });
-
       this.lock.hide();
     });
   }
@@ -47,11 +46,12 @@ export class AuthService {
     localStorage.removeItem('profile');
     localStorage.removeItem('id_token');
 
-    // Send the user back to the public deals page after logout
+    // Send the user back to the home page after logout
     this.router.navigateByUrl('/');
   }
 
-  // Finally, this method will check to see if the user is logged in. We'll be able to tell by checking to see if they have a token and whether that token is valid or not.
+  // Finally, this method will check to see if the user is logged in. We'll be able to tell by
+  // checking to see if they have a token and whether that token is valid or not.
   loggedIn() {
     return tokenNotExpired();
   }

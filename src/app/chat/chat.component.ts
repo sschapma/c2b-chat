@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatService }       from '../services/chat.service';
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
-import { ToastComponent } from '../shared/toast/toast.component';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 @Component({
   selector: 'chat',
@@ -30,7 +30,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(private chatService:ChatService,
               private formBuilder: FormBuilder,
-              private toast: ToastComponent) {}
+              private alert: AlertComponent) {}
 
   sendMessage(){
     let x = localStorage.getItem("chatId");
@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     //alert(JSON.stringify(this.addCommentForm.value));
     this.chatService.sendComment(this.addCommentForm.value).subscribe(
       res => {
-        this.toast.setMessage("message sent successfully.", "success");
+        this.alert.setMessage("message sent successfully.", "success");
         this.showChatBtn = true;
         this.leaveMessage = false;
         this.addCommentForm.reset();

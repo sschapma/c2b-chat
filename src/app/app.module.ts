@@ -6,19 +6,16 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { DataService } from './services/data.service';
 import { ChatService } from './services/chat.service';
 import { AuthService } from './services/auth.service';
 import * as io from 'socket.io-client';
 
-import { ToastComponent } from './shared/toast/toast.component';
 import { AgentComponent } from './agent/agent.component';
 import { ChatComponent } from './chat/chat.component';
+import { AlertComponent } from './shared/alert/alert.component';
 
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'about', component: AboutComponent },
     { path: 'agent', component: AgentComponent }
 ]);
 
@@ -26,10 +23,9 @@ const routing = RouterModule.forRoot([
   declarations: [
     AppComponent,
     HomeComponent,
-    AboutComponent,
-    ToastComponent,
     AgentComponent,
-    ChatComponent
+    ChatComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -39,10 +35,9 @@ const routing = RouterModule.forRoot([
     routing
   ],
   providers: [
-    DataService,
     ChatService,
     AuthService,
-    ToastComponent
+    AlertComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

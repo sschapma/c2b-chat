@@ -16,15 +16,22 @@ body, .container {
 .logout:hover{
   cursor: pointer;
 }
+.subtext{
+  font-weight: bold;
+  font-size: 0.8em;
+}
 .chat {
     position:fixed;
-    bottom:35px;
+    bottom:20px;
     right:30px;
     z-index:1000;
-    max-height:40%;
+    max-height:50%;
     overflow-x:hidden;
     overflow-y: auto;
     width:30%;
+}
+.panel-adjust{
+  margin-bottom:0;
 }
 .open-chat-btn{
   border-radius:100%;

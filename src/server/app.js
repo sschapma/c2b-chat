@@ -4,10 +4,10 @@ var morgan = require('morgan'); // logger
 var bodyParser = require('body-parser');
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var nodemailer = require('nodemailer');
-var jwt = require('express-jwt');
-var cors = require('cors');
+var io = require('socket.io')(http); //handles chat sockets
+var nodemailer = require('nodemailer'); //sends email if no agent available
+var jwt = require('express-jwt'); //json web tokens for authorization
+var cors = require('cors'); //required for cross origin requests from auth0
 
 app.use(cors());
 app.set('port', (process.env.PORT || 3000));
@@ -20,81 +20,36 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan('dev'));
 
+//auth0 authentication
+//you must sign up for a free account at auth0.com to get these keys
+var auth0Secret = 'g0Ha8D0mM6TJrTZIfxxz6Ey4ewb2gX7wDJK8daUum09ywGueaLqhF2ti2kMmL-nc';
+var auth0ClientId = 'tryydia9RW5tOc27TNg3sacg32RNjNcf';
+var authCheck = jwt({
+  secret: new Buffer(auth0Secret, 'base64'),
+  audience: auth0ClientId
+});
+
+//initiate db
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test');
 var db = mongoose.connection;
 mongoose.Promise = global.Promise;
 
-var authCheck = jwt({
-  secret: new Buffer('g0Ha8D0mM6TJrTZIfxxz6Ey4ewb2gX7wDJK8daUum09ywGueaLqhF2ti2kMmL-nc', 'base64'),
-  audience: 'tryydia9RW5tOc27TNg3sacg32RNjNcf' //client-id
-});
-
 // Models
-var Cat = require('./cat.model.js');
 var Chat = require('./chat.model.js');
-//var Agent = require('./agent.model.js');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Connected to MongoDB');
+
+  //used to get and change agent online status
   var agentStatus = {isOnline:false};
-  // APIs
   app.get('/agentStatus', function(req, res) {
     res.json(agentStatus);
   });
   app.post('/agentStatus', function(req, res) {
     agentStatus = req.body;
     res.json(agentStatus);
-  });
-
-  // select all
-  app.get('/cats', function(req, res) {
-    Cat.find({}, function(err, docs) {
-      if(err) return console.error(err);
-      res.json(docs);
-    });
-  });
-
-  // count all
-  app.get('/cats/count', function(req, res) {
-    Cat.count(function(err, count) {
-      if(err) return console.error(err);
-      res.json(count);
-    });
-  });
-
-  // create
-  app.post('/cat', function(req, res) {
-    var obj = new Cat(req.body);
-    obj.save(function(err, obj) {
-      if(err) return console.error(err);
-      res.status(200).json(obj);
-    });
-  });
-
-  // find by id
-  app.get('/cat/:id', function(req, res) {
-    Cat.findOne({_id: req.params.id}, function(err, obj) {
-      if(err) return console.error(err);
-      res.json(obj);
-    })
-  });
-
-  // update by id
-  app.put('/cat/:id', function(req, res) {
-    Cat.findOneAndUpdate({_id: req.params.id}, req.body, function(err) {
-      if(err) return console.error(err);
-      res.sendStatus(200);
-    })
-  });
-
-  // delete by id
-  app.delete('/cat/:id', function(req, res) {
-    Cat.findOneAndRemove({_id: req.params.id}, function(err) {
-      if(err) return console.error(err);
-      res.sendStatus(200);
-    });
   });
 
   //chat APIs
@@ -106,21 +61,20 @@ db.once('open', function() {
     });
   });
 
+  //find by socket id to pair with db id
   app.get('/chats/find', function(req, res) {
     Chat.findOne({'messages.socketId':req}, function(err, obj) {
       if(err) return console.error(err);
       res.json(obj);
-      console.log(obj);
     });
   });
 
-  // create
+  // create a new chat object
   app.post('/chat', function(req, res) {
     var obj = new Chat(req.body);
     obj.save(function(err, obj) {
       if(err) return console.error(err);
       res.status(200).json(obj);
-      console.log(obj);
     });
   });
 
@@ -129,11 +83,10 @@ db.once('open', function() {
     Chat.findOne({_id: req.params.id}, function(err, obj) {
       if(err) return console.error(err);
       res.json(obj);
-      console.log(obj);
-    })
+    });
   });
 
-  // update by id
+  // update by id (push new message to chat object)
   app.put('/chat/:id', function(req, res) {
     Chat.findByIdAndUpdate(
       {_id: req.params.id},
@@ -144,6 +97,14 @@ db.once('open', function() {
         res.sendStatus(200);
       }
     );
+  });
+
+  // delete by id
+  app.delete('/chat/:id', function(req, res) {
+    Chat.findOneAndRemove({_id: req.params.id}, function(err) {
+      if(err) return console.error(err);
+      res.sendStatus(200);
+    });
   });
 
   // send Email when no agents are online
@@ -157,8 +118,8 @@ db.once('open', function() {
     });
     var mailOptions = {
         from: '"NEW CUSTOMER" <user@gmail.com>', // sender address
-        replyTo: req.body.email,
-        to: 'user@gmail.com', // list of receivers
+        replyTo: req.body.email, // the from field is a bit buggy, this ensures you reply to the correct email address
+        to: 'user@gmail.com', // who will receive the email
         subject: 'New Customer Email from ' + req.body.name, // Subject line
         text: req.body.comment //, // plaintext body
         // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
@@ -174,56 +135,37 @@ db.once('open', function() {
       });
     });
 
-
-  // delete by id
-  app.delete('/chat/:id', function(req, res) {
-    Chat.findOneAndRemove({_id: req.params.id}, function(err) {
-      if(err) return console.error(err);
-      res.sendStatus(200);
-    });
-  });
-
-
   // all other routes are handled by Angular
   app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname,'/../../dist/index.html'));
   });
 
-  let openSockets = [];
+  //socket.io
+  let openSockets = 0; //number of open sockets
 
   io.on('connection', (socket) => {
-    console.log('user connected');
+    openSockets++;
+    console.log('user connected. '+openSockets+' open connections.');
     let userId = socket.id;
-    openSockets.push(userId);
-    //console.log(openSockets);
-    io.to(socket.id).emit("abc", socket.id);
-    io.to(socket.id).emit("agent", openSockets);
+    io.to(socket.id).emit("abc", socket.id); //sends socketId to client
 
     socket.on('disconnect', function(){
-      let socketIndex = openSockets.indexOf(userId);
-      openSockets.splice(socketIndex,1);
-      //console.log(openSockets);
-      console.log('user disconnected');
+      openSockets--;
+      console.log('user disconnected. '+openSockets+' open connections.');
     });
 
+    //sets format of new message based on sender
     socket.on('add-message', (message, userName, dbId, chatId, agent) => {
       if (agent){
-        let a = {message:message,userName:userName,dbId:dbId,id:chatId,agent:agent};
-        console.log(a);
         io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       }else{
         io.emit('message', {type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
       }
-      console.log('line 171' + message);
     });
-    /*socket.on('agent-message', (message, chatId, userName) => {
-      io.to(chatId).emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
-      console.log(message);
-    });*/
   });
 
   http.listen(app.get('port'), function() {
-    console.log('Angular 2 Full Stack listening on port '+app.get('port'));
+    console.log('Angular 2 Full Stack C2B Chat listening on port '+app.get('port'));
   });
 });
 

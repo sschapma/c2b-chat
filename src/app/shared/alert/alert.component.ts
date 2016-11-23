@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-toast',
-  templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.css']
+  selector: 'alert',
+  templateUrl: './alert.component.html',
+  styleUrls: ['./alert.component.css']
 })
-export class ToastComponent {
+export class AlertComponent {
   @Input() message = { body: '', type: '' };
 
   setMessage(body, type, time = 3000) {
