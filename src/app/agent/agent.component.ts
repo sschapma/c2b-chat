@@ -20,6 +20,7 @@ export class AgentComponent implements OnInit, OnDestroy {
   agentMsg;
   id;
   chatId;
+  currentDbId;
 
   constructor(private chatService:ChatService,
               private toast: ToastComponent,
@@ -39,6 +40,18 @@ export class AgentComponent implements OnInit, OnDestroy {
   agentMessage(){
     this.chatService.agentMessage(this.agentMsg, this.currentChat.user,this.currentChat.dbId, this.currentChat.id, 'agent');
     this.updateDb(this.currentChat.dbId);
+  }
+  newMessage(chat){
+    console.log(chat);
+    let tmpArray = [];
+    for (let msg of this.messages){
+      if (msg.dbId === chat.dbId){
+        tmpArray.push(msg.sender);
+      }
+    }
+    let sender = tmpArray[tmpArray.length-1];
+    if (sender == 'client'){return true}
+    return false;
   }
   updateDb(id){
     let msgToPush = {
@@ -121,6 +134,7 @@ export class AgentComponent implements OnInit, OnDestroy {
     }, 5000);
   }
   getInfo(chat){
+    this.currentDbId = chat.dbId;
     this.currentChat = chat;
   }
 

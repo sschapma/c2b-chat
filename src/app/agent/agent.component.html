@@ -2,8 +2,10 @@
 <div class="panel panel-primary chat-list">
   <div class="panel-heading activeRadius">Active Chats</div>
   <div class="panel-body active-sidebar">
-      <div *ngFor="let chat of activeChats" (click)="getInfo(chat);" class="user-div">
-        <h6 style="margin:0;">{{chat.user}}</h6>
+      <div *ngFor="let chat of activeChats" (click)="getInfo(chat);" class="user-div" [ngClass]="{ 'active': chat == currentChat }">
+        <h6 style="margin:0;">{{chat.user}}
+          <span *ngIf="newMessage(chat)"><i class="fa fa-circle" style="color:green;"></i></span>
+        </h6>
       </div>
   </div>
 </div>
