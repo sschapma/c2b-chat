@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ChatService {
-  private url = 'http://localhost:3000';
+  private url = 'https://c2b-chat.herokuapp.com/';
   private socket;
   public sessionId;
 
