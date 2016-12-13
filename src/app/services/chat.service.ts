@@ -27,7 +27,7 @@ export class ChatService {
   //connects with socket.io
   getMessages() {
     let observable = new Observable(observer => {
-      this.socket = io(this.url);
+      this.socket = io();
       this.socket.on('abc', (data) => {
         this.sessionId = data;
       });
