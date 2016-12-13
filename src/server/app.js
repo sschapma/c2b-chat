@@ -31,7 +31,8 @@ var authCheck = jwt({
 
 //initiate db
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/test');
+//mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://sschapma:qwerty@ds133348.mlab.com:33348/heroku_cwd47xfm');
 var db = mongoose.connection;
 mongoose.Promise = global.Promise;
 
