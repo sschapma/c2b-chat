@@ -10,7 +10,7 @@ var jwt = require('express-jwt'); //json web tokens for authorization
 var cors = require('cors'); //required for cross origin requests from auth0
 
 app.use(cors());
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || 80)); //this is deployed, change port for development
 
 app.use('/', express.static(__dirname + '/../../dist'));
 app.use('/', express.static(__dirname + '/../public'));

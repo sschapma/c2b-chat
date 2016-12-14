@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ChatService {
-  private url = 'wss://c2b-chat.herokuapp.com/';
+  private url = 'http://localhost:3000/'; //only used in development
   private socket;
   public sessionId;
 
@@ -27,7 +27,7 @@ export class ChatService {
   //connects with socket.io
   getMessages() {
     let observable = new Observable(observer => {
-      this.socket = io();
+      this.socket = io(); //add this.url for localhost development
       this.socket.on('abc', (data) => {
         this.sessionId = data;
       });

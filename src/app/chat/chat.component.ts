@@ -207,7 +207,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // if no agent, displays email form
         this.leaveMessage = true;
       }
-    }, 200);
+    }, 500);
   }
   //opens new chat window
   openChat(){
