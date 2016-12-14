@@ -109,7 +109,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       if (clear){this.message = '';}
       let elem = document.getElementById('chatModal');
       elem.scrollIntoView(false);
-    }, 50);
+    }, 100);
   }
   //this searches db for id and if it exists, pushes all previous messages to messages array
   prevMsg(id){
