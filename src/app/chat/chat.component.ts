@@ -93,19 +93,15 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.dbMessage = result;
         localStorage.setItem("chatId",result._id);
         localStorage.setItem("userName",this.userName);
+        //gets db id and sends to socket.io
+        setTimeout(() => {
+          let g = localStorage.getItem("chatId");
+          this.chatService.sendMessage(this.message, this.userName, g);
+          this.clearAndScroll(true);
+        }, 100);
       },
       error => console.log(error)
     );
-    //gets db id and sends to socket.io
-    let g;
-    while (!g){
-      let x = localStorage.getItem("chatId");
-      if (x){
-        this.chatService.sendMessage(this.message, this.userName, x);
-        this.clearAndScroll(true);
-        g = true;
-      }
-    }
   }
   //clears input and scrolls to bottom of screen
   clearAndScroll(clear){
