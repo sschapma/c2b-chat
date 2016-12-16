@@ -4,7 +4,6 @@ var morgan = require('morgan'); // logger
 var bodyParser = require('body-parser');
 var app = require('express')();
 var http = require('http').Server(app);
-//var io = require('socket.io').listen(http); //handles chat sockets
 var io = require('socket.io')(http); //handles chat sockets
 var nodemailer = require('nodemailer'); //sends email if no agent available
 var jwt = require('express-jwt'); //json web tokens for authorization
@@ -161,7 +160,6 @@ db.once('open', function() {
       if (agent){
         io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       }else{
-        console.log({type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
         io.emit('message', {type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
       }
     });
