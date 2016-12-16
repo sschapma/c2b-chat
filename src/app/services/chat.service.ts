@@ -32,6 +32,7 @@ export class ChatService {
         this.sessionId = data;
       });
       this.socket.on('message', (data) => {
+        console.log('socket works!');
         observer.next(data);
       });
       return () => {
