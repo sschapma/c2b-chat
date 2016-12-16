@@ -9,8 +9,12 @@ If an agent is available, clicking on the chat icon in the bottom right corner w
 If no agent is available, a short form will pop up so the customer can send the company an email.
 In case there is an issue with the connection, the project sets a localStorage token to continue the chat on a page refresh. (Chats are backed up by the database.)
 
+![](http://sschapman.com/img/gifs/no-agent.gif)![](http://sschapman.com/img/gifs/client.gif)
+
 ###Agent Side
 Upon loading the agent page, the Auth0 lock modal will pop up for authorization. After authorizing, the agent page will connect with the server to set their status as online, get all open chats from the database, and connect to socket.io. A list of all open chats appears on the left side (with a green dot indicating a chat awaiting reponse). Clicking the user name will display the chat window. When the chat is complete, it can be deleted by clicking the 'X' in the top right corner.
+
+![](http://sschapman.com/img/gifs/agent.gif)
 
 The front-end of this project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
