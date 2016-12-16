@@ -159,8 +159,10 @@ db.once('open', function() {
     //sets format of new message based on sender
     socket.on('add-message', (message, userName, dbId, chatId, agent) => {
       if (agent){
+        console.log('agent message');
         io.emit('message', {type:'new-message', sender: 'agent', id: chatId, content: message, user: userName});
       }else{
+        console.log('client message');
         io.emit('message', {type:'new-message', sender: 'client', id: userId, dbId: dbId, content: message, user: userName});
       }
     });
