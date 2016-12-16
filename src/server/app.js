@@ -4,13 +4,13 @@ var morgan = require('morgan'); // logger
 var bodyParser = require('body-parser');
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io').listen(http); //handles chat sockets
+var io = require('socket.io')(http); //handles chat sockets
 var nodemailer = require('nodemailer'); //sends email if no agent available
 var jwt = require('express-jwt'); //json web tokens for authorization
 var cors = require('cors'); //required for cross origin requests from auth0
 
 app.use(cors());
-app.set('port', (process.env.PORT || 80)); //this is deployed, change port for development
+app.set('port', (process.env.PORT || 3000)); //served on localhost:3000
 
 app.use('/', express.static(__dirname + '/../../dist'));
 app.use('/', express.static(__dirname + '/../public'));
@@ -31,8 +31,7 @@ var authCheck = jwt({
 
 //initiate db
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost:27017/test');
-mongoose.connect('mongodb://sam:qwerty@ds133348.mlab.com:33348/heroku_cwd47xfm');
+mongoose.connect('mongodb://localhost:27017/test');
 var db = mongoose.connection;
 mongoose.Promise = global.Promise;
 

@@ -7,7 +7,6 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ChatService {
-  private url = 'http://localhost:3000/'; //only used in development
   private socket;
   public sessionId;
 
