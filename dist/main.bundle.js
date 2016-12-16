@@ -61186,19 +61186,19 @@ var ChatComponent = (function () {
                     time: new Date()
                 }]
         };
-        //add chat
+        //add chat to db
         this.chatService.addChat(chat).subscribe(function (res) {
             var result = res.json();
             _this.dbMessage = result;
             localStorage.setItem("chatId", result._id);
             localStorage.setItem("userName", _this.userName);
         }, function (error) { return console.log(error); });
-        //gets db id and sets it in local storage
+        //gets db id and sends to socket.io
         setTimeout(function () {
             var g = localStorage.getItem("chatId");
             _this.chatService.sendMessage(_this.message, _this.userName, g);
             _this.clearAndScroll(true);
-        }, 200);
+        }, 500);
     };
     //clears input and scrolls to bottom of screen
     ChatComponent.prototype.clearAndScroll = function (clear) {

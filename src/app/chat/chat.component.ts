@@ -86,7 +86,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         time: new Date()
       }]
     };
-    //add chat
+    //add chat to db
     this.chatService.addChat(chat).subscribe(
       res => {
         let result = res.json();
@@ -96,12 +96,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error => console.log(error)
     );
-    //gets db id and sets it in local storage
+    //gets db id and sends to socket.io
     setTimeout(() => {
       let g = localStorage.getItem("chatId");
       this.chatService.sendMessage(this.message, this.userName, g);
       this.clearAndScroll(true);
-    }, 200);
+    }, 500);
   }
   //clears input and scrolls to bottom of screen
   clearAndScroll(clear){
