@@ -101,7 +101,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       let g = localStorage.getItem("chatId");
       this.chatService.sendMessage(this.message, this.userName, g);
       this.clearAndScroll(true);
-    }, 400);
+    }, 500);
   }
   //clears input and scrolls to bottom of screen
   clearAndScroll(clear){
