@@ -61193,18 +61193,14 @@ var ChatComponent = (function () {
             localStorage.setItem("userName", _this.userName);
         }, function (error) { return console.log(error); });
         //gets db id and sends to socket.io
-        var _loop_1 = function(i) {
-            var g = localStorage.getItem("chatId");
-            if (g) {
-                setTimeout(function () {
-                    _this.chatService.sendMessage(_this.message, _this.userName, g);
-                    _this.clearAndScroll(true);
-                    return 0;
-                }, 300);
+        var g;
+        while (!g) {
+            var x = localStorage.getItem("chatId");
+            if (x) {
+                this.chatService.sendMessage(this.message, this.userName, x);
+                this.clearAndScroll(true);
+                g = true;
             }
-        };
-        for (var i = 0; i < 5; i++) {
-            _loop_1(i);
         }
     };
     //clears input and scrolls to bottom of screen
